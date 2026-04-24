@@ -20,4 +20,20 @@ public class OfferController {
     public ApiResponse<List<Offer>> getOffers() {
         return ApiResponse.success(offerService.getActiveOffers());
     }
+
+    @GetMapping("/all")
+    public ApiResponse<List<Offer>> getAllOffers() {
+        return ApiResponse.success(offerService.getAllOffers());
+    }
+
+    @PostMapping
+    public ApiResponse<Offer> createOffer(@RequestBody Offer offer) {
+        return ApiResponse.success(offerService.createOffer(offer));
+    }
+
+    @DeleteMapping("/{id}")
+    public ApiResponse<Void> deleteOffer(@PathVariable Long id) {
+        offerService.deleteOffer(id);
+        return ApiResponse.success(null);
+    }
 }

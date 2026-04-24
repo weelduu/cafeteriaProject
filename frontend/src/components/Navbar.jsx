@@ -19,7 +19,20 @@ const Navbar = () => {
             <div className="bg-primary rounded-xl p-2 shadow-lg shadow-primary/20">
               <Coffee className="text-white" size={24} />
             </div>
-            <span className="text-2xl font-black text-gray-900 tracking-tight">Cafetería IES Serpis</span>
+            <span 
+               onClick={() => navigate('/home')} 
+               className="text-2xl font-black text-gray-900 tracking-tight cursor-pointer"
+            >
+               Cafetería IES Serpis
+            </span>
+            {user?.role === 'ADMIN' && (
+              <button 
+                onClick={() => navigate('/admin')}
+                className="ml-4 px-4 py-2 bg-secondary text-white text-xs font-black uppercase tracking-widest rounded-xl shadow-md hover:bg-secondary/90 transition-all"
+              >
+                Panel Admin
+              </button>
+            )}
           </div>
 
           <div className="flex items-center gap-4 sm:gap-8">

@@ -4,6 +4,7 @@ import ProtectedRoute from './components/ProtectedRoute';
 import LoginPage from './pages/LoginPage';
 import RegisterPage from './pages/RegisterPage';
 import HomePage from './pages/HomePage';
+import AdminPage from './pages/AdminPage';
 
 function App() {
   return (
@@ -17,6 +18,11 @@ function App() {
           {/* Protected Routes */}
           <Route element={<ProtectedRoute />}>
             <Route path="/home" element={<HomePage />} />
+          </Route>
+
+          {/* Admin Routes */}
+          <Route element={<ProtectedRoute allowedRoles={['ADMIN']} />}>
+            <Route path="/admin" element={<AdminPage />} />
           </Route>
           
           {/* Default Redirect */}

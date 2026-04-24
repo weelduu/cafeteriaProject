@@ -17,4 +17,16 @@ public class OfferService {
     public List<Offer> getActiveOffers() {
         return offerRepository.findByEndDateGreaterThanEqual(LocalDate.now());
     }
+
+    public List<Offer> getAllOffers() {
+        return offerRepository.findAll();
+    }
+
+    public Offer createOffer(Offer offer) {
+        return offerRepository.save(offer);
+    }
+
+    public void deleteOffer(Long id) {
+        offerRepository.deleteById(id);
+    }
 }
