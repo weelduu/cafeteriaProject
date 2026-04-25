@@ -17,17 +17,24 @@ public class User {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Column(nullable = false, unique = true, length = 20)
-    private String username;
+    @Column(name = "personal_id", unique = true, length = 20)
+    private String personalId;
 
     @Column(nullable = false, unique = true, length = 150)
     private String email;
+
+    @Column(nullable = false, unique = true, length = 50)
+    private String username;
 
     @Column(nullable = false, length = 255)
     private String password;
 
     @Column(length = 10)
     private String role = "USER";
+
+    @ManyToOne(fetch = FetchType.EAGER)
+    @JoinColumn(name = "institute_id")
+    private Institute institute;
 
     @Column(name = "created_at", columnDefinition = "TIMESTAMP DEFAULT NOW()")
     private LocalDateTime createdAt = LocalDateTime.now();
