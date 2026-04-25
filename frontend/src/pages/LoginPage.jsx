@@ -2,10 +2,10 @@ import { useState } from 'react';
 import { useNavigate, Link } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
 import api, { setAuthToken } from '../api/axios';
-import { User, Lock, AlertCircle } from 'lucide-react';
+import { Mail, Lock, AlertCircle, Coffee } from 'lucide-react';
 
 const LoginPage = () => {
-  const [username, setUsername] = useState('');
+  const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [error, setError] = useState('');
   const [isLoading, setIsLoading] = useState(false);
@@ -19,12 +19,11 @@ const LoginPage = () => {
     setIsLoading(true);
 
     try {
-      const response = await api.post('/auth/login', { username, password });
+      const response = await api.post('/auth/login', { email, password });
 
       if (response.data.success) {
-        const { id, username: name, email, role, token } = response.data.data;
-        // In this simple version, we use the user data directly
-        const user = { id, username: name, email, role };
+        const { id, username: name, email: userEmail, role, token, personalId, institute } = response.data.data;
+        const user = { id, username: name, email: userEmail, role, personalId, institute };
 
         setAuthToken(token || 'demo-token');
         login(user, token || 'demo-token');
@@ -41,13 +40,13 @@ const LoginPage = () => {
 
   return (
     <div className="min-h-screen flex flex-col justify-center py-12 px-4 bg-white md:bg-gray-50">
-      <div className="max-w-md w-full mx-auto">
+      <div className="max-w-md w-full mx-auto group">
         <div className="text-center mb-10 animate-fade-in">
-          <div className="mx-auto h-16 w-16 bg-primary rounded-2xl flex items-center justify-center shadow-lg shadow-primary/30 mb-4">
-            <span className="text-white text-3xl font-bold">C</span>
+          <div className="mx-auto h-20 w-20 bg-primary rounded-[2.5rem] flex items-center justify-center shadow-xl mb-6 group-hover:scale-110 transition-transform duration-500">
+            <Coffee className="text-white" size={40} />
           </div>
           <h2 className="text-4xl font-extrabold text-gray-900 tracking-tight">Bienvenido</h2>
-          <p className="mt-2 text-gray-500">Inicia sesión en tu cuenta de cafetería</p>
+          <p className="mt-2 text-gray-500">Inicia sesión con tu correo escolar</p>
         </div>
 
         <div className="bg-white md:p-10 md:rounded-3xl md:shadow-xl md:border md:border-gray-100 animate-slide-up">
@@ -60,21 +59,21 @@ const LoginPage = () => {
             )}
 
             <div>
-              <label htmlFor="username" className="block text-sm font-semibold text-gray-700 mb-1">
-                Usuario (Formato: 3-0124)
+              <label htmlFor="email" className="block text-sm font-semibold text-gray-700 mb-1">
+                Email Institucional
               </label>
               <div className="relative">
                 <div className="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none text-gray-400">
-                  <User size={18} />
+                  <Mail size={18} />
                 </div>
                 <input
-                  id="username"
-                  type="text"
+                  id="email"
+                  type="email"
                   required
                   className="input-field pl-11"
-                  placeholder="ej. 3-0124"
-                  value={username}
-                  onChange={(e) => setUsername(e.target.value)}
+                  placeholder="ej. alumno@alu.edu.gva.es"
+                  value={email}
+                  onChange={(e) => setEmail(e.target.value)}
                 />
               </div>
             </div>
@@ -113,9 +112,9 @@ const LoginPage = () => {
               </div>
 
               <div className="text-sm">
-                <a href="#" className="font-semibold text-primary hover:text-primary/80 transition-colors">
+                <span className="font-semibold text-primary hover:opacity-80 transition-colors cursor-pointer">
                   ¿Olvidaste tu contraseña?
-                </a>
+                </span>
               </div>
             </div>
 
@@ -130,33 +129,10 @@ const LoginPage = () => {
                 'Acceder'
               )}
             </button>
-
-            <div className="relative py-4">
-              <div className="absolute inset-0 flex items-center">
-                <div className="w-full border-t border-gray-100"></div>
-              </div>
-              <div className="relative flex justify-center text-xs uppercase">
-                <span className="bg-white px-2 text-gray-400 font-semibold tracking-wider">Modo Vista Previa</span>
-              </div>
-            </div>
-
-            <button
-              type="button"
-              onClick={() => {
-                const demoUser = { username: '3-0124', email: 'student@edu.gva.es' };
-                const demoToken = 'demo-token-123';
-                setAuthToken(demoToken);
-                login(demoUser, demoToken);
-                navigate('/home');
-              }}
-              className="w-full btn-secondary flex justify-center items-center gap-2"
-            >
-              Acceso Demo
-            </button>
           </form>
 
-          <div className="mt-8 pt-6 border-t border-gray-100">
-            <p className="text-center text-sm text-gray-600">
+          <div className="mt-8 pt-6 border-t border-gray-100 text-center">
+            <p className="text-sm text-gray-600">
               ¿No tienes cuenta?{' '}
               <Link to="/register" className="font-bold text-primary hover:text-primary/80 transition-colors">
                 Regístrate ahora

@@ -125,17 +125,27 @@ const AdminPage = () => {
                 <tr key={item.id} className="hover:bg-gray-50/30 transition-colors">
                   <td className="px-6 py-5">
                     <div className="font-extrabold text-gray-900">
-                      {item.username || item.name || `Pedido #${item.id}`}
+                      {item.personalId || item.name || `Pedido #${item.id}`}
                     </div>
                     <div className="text-xs text-gray-400 font-bold uppercase tracking-tight">
                       {item.email || item.category || (item.product?.name ? `Para: ${item.product.name}` : '')}
                     </div>
                   </td>
                   <td className="px-6 py-5 text-sm font-semibold text-gray-600">
-                    {activeTab === 'users' && <span className="bg-primary/10 text-primary px-2 py-0.5 rounded-lg text-xs">{item.role}</span>}
+                    {activeTab === 'users' && (
+                      <span className={`px-2 py-0.5 rounded-lg text-[10px] font-black uppercase tracking-widest ${
+                        item.role === 'ADMIN' ? 'bg-gray-100 text-gray-600' : 'bg-gray-100 text-gray-600'
+                      }`}
+                      style={{ 
+                        backgroundColor: item.role === 'ADMIN' ? 'var(--color-secondary)' : 'var(--color-primary)',
+                        color: 'white'
+                      }}>
+                        {item.role === 'ADMIN' ? 'Administrador' : 'Usuario'}
+                      </span>
+                    )}
                     {activeTab === 'products' && <span>{item.price}€</span>}
                     {activeTab === 'offers' && <span className="text-secondary">-{item.discountPercent}%</span>}
-                    {activeTab === 'reservations' && <span>{item.user?.username} - {item.shift}</span>}
+                    {activeTab === 'reservations' && <span>{item.user?.personalId || item.user?.username} - {item.shift}</span>}
                   </td>
                   <td className="px-6 py-5 text-right space-x-2">
                     {activeTab !== 'reservations' && (
@@ -170,7 +180,7 @@ const AdminPage = () => {
           {activeTab !== 'reservations' && (
             <button 
               onClick={() => { setEditingItem(null); setIsModalOpen(true); }}
-              className="flex items-center justify-center gap-2 bg-primary text-white px-6 py-3 rounded-2xl font-black uppercase tracking-widest text-sm shadow-xl shadow-primary/20 hover:scale-105 active:scale-95 transition-all"
+              className="flex items-center justify-center gap-2 bg-primary text-white px-6 py-3 rounded-2xl font-black uppercase tracking-widest text-sm shadow-xl hover:scale-105 active:scale-95 transition-all"
             >
               <Plus size={20} />
               <span>Añadir {activeTab === 'users' ? 'Usuario' : activeTab === 'products' ? 'Producto' : 'Oferta'}</span>
@@ -238,8 +248,8 @@ const AdminPage = () => {
                   <div>
                     <label className="block text-xs font-black text-gray-400 uppercase tracking-widest mb-1">Rol</label>
                     <select name="role" defaultValue={editingItem?.role || 'USER'} className="w-full px-4 py-3 rounded-xl bg-gray-50 border-none focus:ring-2 focus:ring-primary font-bold">
-                      <option value="USER">Alumno (USER)</option>
-                      <option value="ADMIN">Administrador (ADMIN)</option>
+                      <option value="USER">Usuario (Alumno)</option>
+                      <option value="ADMIN">Administrador (Personal)</option>
                     </select>
                   </div>
                 </>
@@ -286,7 +296,7 @@ const AdminPage = () => {
               )}
 
               <div className="pt-4">
-                <button type="submit" className="w-full bg-primary text-white py-4 rounded-2xl font-black uppercase tracking-widest shadow-xl shadow-primary/20 hover:scale-[1.02] active:scale-[0.98] transition-all">
+                <button type="submit" className="w-full bg-primary text-white py-4 rounded-2xl font-black uppercase tracking-widest shadow-xl active:scale-[0.98] transition-all">
                   Guardar Cambios
                 </button>
               </div>

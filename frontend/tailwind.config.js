@@ -8,11 +8,11 @@ export default {
     extend: {
       colors: {
         primary: {
-          DEFAULT: '#F97316', // Orange
-          dark: '#92400E',    // Brown
+          DEFAULT: 'var(--color-primary, #F97316)',
+          dark: 'var(--color-primary-dark, #92400E)',
         },
         secondary: {
-          DEFAULT: '#92400E', // Brown
+          DEFAULT: 'var(--color-secondary, #92400E)',
         }
       },
       borderRadius: {

@@ -1,17 +1,15 @@
 import { useState } from 'react';
 import { useNavigate, Link } from 'react-router-dom';
 import api from '../api/axios';
-import { User, Lock, Mail, Building, AlertCircle, ArrowLeft } from 'lucide-react';
+import { Lock, Mail, Building, AlertCircle, ArrowLeft } from 'lucide-react';
 
 const institutes = [
   { id: 1, name: 'IES Serpis' },
-  { id: 2, name: 'IES Cabanyal' },
-  { id: 3, name: 'IES Abastos' }
+  { id: 2, name: 'IES Cabanyal' }
 ];
 
 const RegisterPage = () => {
   const [formData, setFormData] = useState({
-    username: '',
     email: '',
     password: '',
     confirmPassword: '',
@@ -35,11 +33,15 @@ const RegisterPage = () => {
       return;
     }
 
+    if (!formData.email.toLowerCase().endsWith('@alu.edu.gva.es')) {
+      setError('Debes usar tu correo oficial @alu.edu.gva.es');
+      return;
+    }
+
     setIsLoading(true);
 
     try {
       const response = await api.post('/auth/register', {
-        username: formData.username,
         email: formData.email,
         password: formData.password,
         instituteId: parseInt(formData.instituteId)
@@ -66,7 +68,7 @@ const RegisterPage = () => {
               Volver al inicio de sesión
            </Link>
           <h2 className="text-3xl font-extrabold text-gray-900 tracking-tight">Crea tu cuenta</h2>
-          <p className="mt-2 text-gray-500">Únete a la red de la cafetería</p>
+          <p className="mt-2 text-gray-500">Únete con tu correo de alumno</p>
         </div>
 
         <div className="bg-white md:p-8 md:rounded-3xl md:shadow-xl md:border md:border-gray-100 animate-slide-up">
@@ -80,7 +82,7 @@ const RegisterPage = () => {
 
             <div>
               <label htmlFor="email" className="block text-sm font-semibold text-gray-700 mb-1">
-                Email Escolar
+                Email Escolar (@alu.edu.gva.es)
               </label>
               <div className="relative">
                 <div className="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none text-gray-400">
@@ -92,57 +94,34 @@ const RegisterPage = () => {
                   type="email"
                   required
                   className="input-field pl-11"
-                  placeholder="nombre@edu.gva.es"
+                  placeholder="nombre@alu.edu.gva.es"
                   value={formData.email}
                   onChange={handleChange}
                 />
               </div>
             </div>
 
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-              <div>
-                <label htmlFor="username" className="block text-sm font-semibold text-gray-700 mb-1">
-                  Usuario (3-0124)
-                </label>
-                <div className="relative">
-                    <div className="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none text-gray-400">
-                        <User size={18} />
-                    </div>
-                    <input
-                        id="username"
-                        name="username"
-                        type="text"
-                        required
-                        className="input-field pl-11"
-                        placeholder="ej. 3-0124"
-                        value={formData.username}
-                        onChange={handleChange}
-                    />
-                </div>
-              </div>
-              
-              <div>
-                <label htmlFor="instituteId" className="block text-sm font-semibold text-gray-700 mb-1">
-                  Instituto
-                </label>
-                <div className="relative">
-                    <div className="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none text-gray-400">
-                        <Building size={18} />
-                    </div>
-                    <select
-                        id="instituteId"
-                        name="instituteId"
-                        required
-                        className="input-field pl-11 appearance-none"
-                        value={formData.instituteId}
-                        onChange={handleChange}
-                    >
-                        <option value="">Selecciona...</option>
-                        {institutes.map(inst => (
-                            <option key={inst.id} value={inst.id}>{inst.name}</option>
-                        ))}
-                    </select>
-                </div>
+            <div>
+              <label htmlFor="instituteId" className="block text-sm font-semibold text-gray-700 mb-1">
+                Tu Centro Educativo
+              </label>
+              <div className="relative">
+                  <div className="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none text-gray-400">
+                      <Building size={18} />
+                  </div>
+                  <select
+                      id="instituteId"
+                      name="instituteId"
+                      required
+                      className="input-field pl-11 appearance-none"
+                      value={formData.instituteId}
+                      onChange={handleChange}
+                  >
+                      <option value="">Selecciona tu instituto...</option>
+                      {institutes.map(inst => (
+                          <option key={inst.id} value={inst.id}>{inst.name}</option>
+                      ))}
+                  </select>
               </div>
             </div>
 
@@ -196,13 +175,13 @@ const RegisterPage = () => {
               {isLoading ? (
                 <div className="h-5 w-5 border-2 border-white/30 border-t-white rounded-full animate-spin"></div>
               ) : (
-                'Crear Cuenta'
+                'Registrarse'
               )}
             </button>
           </form>
 
-          <p className="mt-8 text-center text-sm text-gray-600">
-             Se aplican la política de privacidad y los términos.
+          <p className="mt-8 text-center text-xs text-gray-400 uppercase tracking-widest font-semibold">
+             Sistema de Gestión de Comedor
           </p>
         </div>
       </div>
