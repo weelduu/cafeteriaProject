@@ -52,4 +52,8 @@ public class ReservationService {
         reservation.setStatus("CANCELLED");
         return reservationRepository.save(reservation);
     }
+
+    public List<Reservation> getAllReservations() {
+        return reservationRepository.findAll();
+    }
 }

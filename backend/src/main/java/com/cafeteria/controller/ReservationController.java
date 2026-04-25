@@ -22,6 +22,11 @@ public class ReservationController {
         return ApiResponse.success(reservationService.getMyReservations(userId));
     }
 
+    @GetMapping("/all")
+    public ApiResponse<List<Reservation>> getAllReservations() {
+        return ApiResponse.success(reservationService.getAllReservations());
+    }
+
     @PostMapping
     public ApiResponse<Reservation> createReservation(@RequestBody ReservationRequest request) {
         Reservation reservation = reservationService.createReservation(

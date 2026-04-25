@@ -7,23 +7,19 @@ export const AuthProvider = ({ children }) => {
   const [token, setToken] = useState(null);
   const [loading, setLoading] = useState(true);
 
-  // For development persistence (optional, keeping in memory as requested)
-  // logout on refresh unless we use sessionStorage
+
   
   const login = (userData, userToken) => {
     setUser(userData);
     setToken(userToken);
-    // sessionStorage.setItem('token', userToken); // Optional: if we want to survive refresh
   };
 
   const logout = () => {
     setUser(null);
     setToken(null);
-    // sessionStorage.removeItem('token');
   };
 
   useEffect(() => {
-    // Check if there's a token in session storage if we decide to use it
     setLoading(false);
   }, []);
 

@@ -1,0 +1,9 @@
+com\cafeteria\repository\OfferRepository.class
+com\cafeteria\repository\ReservationRepository.class
+com\cafeteria\controller\ReservationController.class
+com\cafeteria\controller\OfferController.class
+com\cafeteria\model\Offer.class
+com\cafeteria\service\AuthService.class
+com\cafeteria\service\ReservationService.class
+com\cafeteria\controller\ReservationController$ReservationRequest.class
+com\cafeteria\model\Reservation.class
