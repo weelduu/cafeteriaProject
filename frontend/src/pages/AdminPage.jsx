@@ -125,7 +125,7 @@ const AdminPage = () => {
                 <tr key={item.id} className="hover:bg-gray-50/30 transition-colors">
                   <td className="px-6 py-5">
                     <div className="font-extrabold text-gray-900">
-                      {item.personalId ? `${item.personalId} - ${item.username}` : (item.username || item.name || `Pedido #${item.id}`)}
+                      {item.personalId || item.name || `Pedido #${item.id}`}
                     </div>
                     <div className="text-xs text-gray-400 font-bold uppercase tracking-tight">
                       {item.email || item.category || (item.product?.name ? `Para: ${item.product.name}` : '')}
