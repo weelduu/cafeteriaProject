@@ -12,4 +12,6 @@ public interface UserRepository extends JpaRepository<User, Long> {
     Optional<User> findByPersonalId(String personalId);
     List<User> findByInstitute_Id(Long instituteId);
     long countByInstitute_Id(Long instituteId);
+    List<User> findByPenaltyEndDateAfter(java.time.LocalDateTime date);
+    List<User> findByPenaltyLevelGreaterThan(int level);
 }

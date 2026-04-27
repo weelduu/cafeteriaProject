@@ -19,6 +19,7 @@ public class ReservationService {
     private final ReservationRepository reservationRepository;
     private final UserRepository userRepository;
     private final ProductRepository productRepository;
+    private final PenaltyService penaltyService;
 
     public List<Reservation> getMyReservations(Long userId) {
         return reservationRepository.findByUserIdOrderByCreatedAtDesc(userId);
@@ -27,6 +28,10 @@ public class ReservationService {
     public Reservation createReservation(Long userId, Long productId, String shift) {
         User user = userRepository.findById(userId)
                 .orElseThrow(() -> new RuntimeException("Usuario no encontrado (ID: " + userId + ")"));
+        
+        if (user.getPenaltyEndDate() != null && user.getPenaltyEndDate().isAfter(java.time.LocalDateTime.now())) {
+            throw new RuntimeException("El usuario tiene una penalización activa hasta " + user.getPenaltyEndDate() + " y no puede realizar pedidos.");
+        }
         
         Product product = productRepository.findById(productId)
                 .orElseThrow(() -> new RuntimeException("Producto no encontrado (ID: " + productId + ")"));
@@ -51,6 +56,19 @@ public class ReservationService {
         
         reservation.setStatus("CANCELLED");
         return reservationRepository.save(reservation);
+    }
+
+    public Reservation markAsNotPickedUp(Long id) {
+        Reservation reservation = reservationRepository.findById(id)
+                .orElseThrow(() -> new RuntimeException("Reserva no encontrada (ID: " + id + ")"));
+        
+        reservation.setStatus("NOT_PICKED_UP");
+        reservation = reservationRepository.save(reservation);
+        
+        // Apply penalty to the user
+        penaltyService.penalizeUser(reservation.getUser());
+        
+        return reservation;
     }
 
     public List<Reservation> getAllReservations() {
