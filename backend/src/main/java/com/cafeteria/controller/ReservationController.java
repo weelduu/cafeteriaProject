@@ -42,6 +42,11 @@ public class ReservationController {
         return ApiResponse.success(reservationService.cancelReservation(id));
     }
 
+    @PutMapping("/{id}/not-picked-up")
+    public ApiResponse<Reservation> markAsNotPickedUp(@PathVariable Long id) {
+        return ApiResponse.success(reservationService.markAsNotPickedUp(id));
+    }
+
     @Data
     public static class ReservationRequest {
         private Long userId;

@@ -11,7 +11,9 @@ import {
   Plus, 
   X,
   CheckCircle2,
-  AlertCircle
+  AlertCircle,
+  AlertOctagon,
+  Ban
 } from 'lucide-react';
 
 const AdminPage = () => {
@@ -31,6 +33,7 @@ const AdminPage = () => {
         case 'products': endpoint = '/products'; break;
         case 'offers': endpoint = '/offers/all'; break;
         case 'reservations': endpoint = '/reservations/all'; break;
+        case 'penalties': endpoint = '/users/penalized'; break;
         default: endpoint = '/users';
       }
       const res = await api.get(endpoint);
@@ -63,6 +66,26 @@ const AdminPage = () => {
     } catch (err) {
       console.error('Delete failed', err);
       alert('Error al eliminar el elemento.');
+    }
+  };
+
+  const handleMarkNotPickedUp = async (id) => {
+    if (!window.confirm('¿Marcar pedido como NO RECOGIDO? Esto penalizará al usuario.')) return;
+    try {
+      await api.put(`/reservations/${id}/not-picked-up`);
+      fetchTabData(activeTab);
+    } catch (err) {
+      alert('Error al marcar no recogido: ' + (err.response?.data?.message || err.message));
+    }
+  };
+
+  const handleRemovePenalty = async (id) => {
+    if (!window.confirm('¿Quitar penalización a este usuario?')) return;
+    try {
+      await api.put(`/users/${id}/remove-penalty`);
+      fetchTabData(activeTab);
+    } catch (err) {
+      alert('Error al quitar penalización: ' + (err.response?.data?.message || err.message));
     }
   };
 
@@ -145,17 +168,41 @@ const AdminPage = () => {
                     )}
                     {activeTab === 'products' && <span>{item.price}€</span>}
                     {activeTab === 'offers' && <span className="text-secondary">-{item.discountPercent}%</span>}
-                    {activeTab === 'reservations' && <span>{item.user?.personalId || item.user?.username} - {item.shift}</span>}
+                    {activeTab === 'reservations' && (
+                      <div>
+                        <span>{item.user?.personalId || item.user?.username} - {item.shift}</span>
+                        <div className="text-xs text-gray-400 mt-1">Estado: {item.status}</div>
+                      </div>
+                    )}
+                    {activeTab === 'penalties' && (
+                      <div className="flex flex-col text-xs">
+                        <span className="text-red-500 font-black">Nivel {item.penaltyLevel}</span>
+                        <span className="text-gray-500">Inicio: {new Date(item.penaltyStartDate).toLocaleDateString()}</span>
+                        <span className="text-gray-500">Fin: {new Date(item.penaltyEndDate).toLocaleDateString()}</span>
+                      </div>
+                    )}
                   </td>
                   <td className="px-6 py-5 text-right space-x-2">
-                    {activeTab !== 'reservations' && (
+                    {activeTab === 'reservations' && item.status === 'ACTIVE' && (
+                      <button onClick={() => handleMarkNotPickedUp(item.id)} className="p-2 text-gray-400 hover:text-red-500 transition-colors" title="Marcar NO Recogido">
+                        <Ban size={18} />
+                      </button>
+                    )}
+                    {activeTab === 'penalties' && (
+                      <button onClick={() => handleRemovePenalty(item.id)} className="p-2 text-gray-400 hover:text-green-500 transition-colors" title="Quitar Penalización">
+                        <CheckCircle2 size={18} />
+                      </button>
+                    )}
+                    {activeTab !== 'reservations' && activeTab !== 'penalties' && (
                       <button onClick={() => handleEdit(item)} className="p-2 text-gray-400 hover:text-primary transition-colors">
                         <Edit3 size={18} />
                       </button>
                     )}
-                    <button onClick={() => handleDelete(item.id)} className="p-2 text-gray-400 hover:text-red-500 transition-colors">
-                      <Trash2 size={18} />
-                    </button>
+                    {activeTab !== 'penalties' && (
+                      <button onClick={() => handleDelete(item.id)} className="p-2 text-gray-400 hover:text-red-500 transition-colors">
+                        <Trash2 size={18} />
+                      </button>
+                    )}
                   </td>
                 </tr>
               ))}
@@ -174,10 +221,10 @@ const AdminPage = () => {
         <div className="flex flex-col md:flex-row md:items-end justify-between gap-6 mb-10">
           <div>
             <h1 className="text-4xl font-black text-gray-900 tracking-tight mb-2">Panel de Control</h1>
-            <p className="text-gray-500 font-medium">Gestiona usuarios, productos, ofertas y pedidos del sistema.</p>
+            <p className="text-gray-500 font-medium">Gestiona usuarios, productos, ofertas, pedidos y penalizaciones.</p>
           </div>
           
-          {activeTab !== 'reservations' && (
+          {activeTab !== 'reservations' && activeTab !== 'penalties' && (
             <button 
               onClick={() => { setEditingItem(null); setIsModalOpen(true); }}
               className="flex items-center justify-center gap-2 bg-primary text-white px-6 py-3 rounded-2xl font-black uppercase tracking-widest text-sm shadow-xl hover:scale-105 active:scale-95 transition-all"
@@ -195,6 +242,7 @@ const AdminPage = () => {
             { id: 'products', label: 'Productos', icon: ShoppingBag },
             { id: 'offers', label: 'Ofertas', icon: Tag },
             { id: 'reservations', label: 'Pedidos', icon: ClipboardList },
+            { id: 'penalties', label: 'Penalizaciones', icon: AlertOctagon },
           ].map(tab => (
             <button
               key={tab.id}
