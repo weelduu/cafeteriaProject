@@ -71,10 +71,10 @@ INSERT INTO institutes (id, name, prefix) VALUES
 
 -- Usuarios iniciales (Admins y algunos alumnos)
 INSERT INTO users (personal_id, username, email, password, role, institute_id) VALUES 
-('admin1', 'admin1', 'admin1@edu.gva.es', 'admin123', 'ADMIN', 1),
-('admin2', 'admin2', 'admin2@edu.gva.es', 'admin123', 'ADMIN', 2),
-('1-0001', '1-0001', 'hugo@alu.edu.gva.es', 'hugo123', 'USER', 1),
-('2-0001', '2-0001', 'luis@alu.edu.gva.es', 'luis123', 'USER', 2);
+('admin1', 'admin1', 'admin1@edu.gva.es', '$2b$10$vu9myOUS5YEHixYgvhCG4uUpeQVlWXryP.zA86ke7ohyZ7FAlyv3K', 'ADMIN', 1),
+('admin2', 'admin2', 'admin2@edu.gva.es', '$2b$10$vu9myOUS5YEHixYgvhCG4uUpeQVlWXryP.zA86ke7ohyZ7FAlyv3K', 'ADMIN', 2),
+('1-0001', '1-0001', 'hugo@alu.edu.gva.es', '$2b$10$vu9myOUS5YEHixYgvhCG4uUpeQVlWXryP.zA86ke7ohyZ7FAlyv3K', 'USER', 1),
+('2-0001', '2-0001', 'luis@alu.edu.gva.es', '$2b$10$vu9myOUS5YEHixYgvhCG4uUpeQVlWXryP.zA86ke7ohyZ7FAlyv3K', 'USER', 2);
 
 -- Productos iniciales
 INSERT INTO products (name, description, price, category, image_url) VALUES 
