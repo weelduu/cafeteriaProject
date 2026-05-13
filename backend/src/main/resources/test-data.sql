@@ -8,15 +8,15 @@ INSERT INTO institutes (name, prefix) VALUES ('IES Newton', 'IESNW');
 -- 2. Insertar Usuarios
 -- Usuario administrador
 INSERT INTO users (personal_id, email, username, password, role, institute_id, created_at, penalty_level) 
-VALUES ('1-0001', 'admin@alu.edu.gva.es', 'admin', 'admin123', 'ADMIN', 1, NOW(), 0);
+VALUES ('1-0001', 'admin@alu.edu.gva.es', 'admin', '$2b$10$vu9myOUS5YEHixYgvhCG4uUpeQVlWXryP.zA86ke7ohyZ7FAlyv3K', 'ADMIN', 1, NOW(), 0);
 
 -- Usuario normal
 INSERT INTO users (personal_id, email, username, password, role, institute_id, created_at, penalty_level) 
-VALUES ('1-0002', 'alumno1@alu.edu.gva.es', 'alumno1', '1234', 'USER', 1, NOW(), 0);
+VALUES ('1-0002', 'alumno1@alu.edu.gva.es', 'alumno1', '$2b$10$auoYfNiMw5bctc8xqZmmkOCPEEMMFyw88fmHhEmMUd0prgB7uefl.', 'USER', 1, NOW(), 0);
 
 -- Usuario penalizado (Nivel 1: 1 semana)
 INSERT INTO users (personal_id, email, username, password, role, institute_id, created_at, penalty_level, penalty_start_date, penalty_end_date) 
-VALUES ('1-0003', 'alumno_penalizado@alu.edu.gva.es', 'alumno_penalizado', '1234', 'USER', 1, NOW(), 1, NOW(), NOW() + INTERVAL '7 days');
+VALUES ('1-0003', 'alumno_penalizado@alu.edu.gva.es', 'alumno_penalizado', '$2b$10$auoYfNiMw5bctc8xqZmmkOCPEEMMFyw88fmHhEmMUd0prgB7uefl.', 'USER', 1, NOW(), 1, NOW(), NOW() + INTERVAL '7 days');
 
 -- 3. Insertar Productos
 INSERT INTO products (name, description, price, category, available, image_url) 

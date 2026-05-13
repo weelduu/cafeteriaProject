@@ -5,6 +5,7 @@ import com.cafeteria.model.User;
 import com.cafeteria.repository.InstituteRepository;
 import com.cafeteria.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import java.util.regex.Pattern;
 
@@ -14,6 +15,7 @@ public class AuthService {
 
     private final UserRepository userRepository;
     private final InstituteRepository instituteRepository;
+    private final PasswordEncoder passwordEncoder;
 
     private static final String EMAIL_REGEX = "^[A-Za-z0-9+_.-]+@(.+)$";
     private static final Pattern EMAIL_PATTERN = Pattern.compile(EMAIL_REGEX);
@@ -22,7 +24,7 @@ public class AuthService {
         User user = userRepository.findByEmail(email)
                 .orElseThrow(() -> new RuntimeException("Usuario no encontrado con ese email"));
 
-        if (!user.getPassword().equals(password)) {
+        if (!passwordEncoder.matches(password, user.getPassword())) {
             throw new RuntimeException("Contraseña incorrecta");
         }
 
@@ -51,7 +53,7 @@ public class AuthService {
         // 5. Crear usuario
         User user = new User();
         user.setEmail(email);
-        user.setPassword(password); // En entorno real, usar BCrypt
+        user.setPassword(passwordEncoder.encode(password));
         user.setPersonalId(personalId);
         user.setUsername(personalId); // Usamos el personalId como username por defecto
         user.setRole("USER");
